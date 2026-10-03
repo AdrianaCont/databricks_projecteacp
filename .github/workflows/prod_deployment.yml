@@ -1,0 +1,31 @@
+name: Deploy bundle a produccion  
+concurrency: 
+group: prod-bakehouse_automotive 
+cancel-in-progress: false 
+on: 
+push: 
+branches: 
+- main 
+paths: 
+- "bakehouse_automotive/**" 
+- ".github/workflows/prod_deployment.yml" 
+workflow_dispatch: 
+jobs: 
+deploy: 
+name: Validar y desplegar 
+runs-on: ubuntu-latest 
+defaults: 
+Page 9 of 15
+Guía del alumno: CI/CD con Declarative Automation Bundles en Databricks 
+run: 
+working-directory: bakehouse_automotive 
+env: 
+DATABRICKS_TOKEN: ${{ secrets.TOKEN_PROD }} 
+DATABRICKS_BUNDLE_ENV: prod 
+steps: 
+- uses: actions/checkout@v4 
+- uses: databricks/setup-cli@main 
+- name: Validar bundle 
+run: databricks bundle validate 
+- name: Desplegar bundle 
+run: databricks bundle deploy 
